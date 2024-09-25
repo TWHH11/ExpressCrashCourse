@@ -1,29 +1,27 @@
-const express = require("express")
+
+import express from 'express';
+import path from 'path'
+import posts from './routes/posts.js'
+import logger from './middleware/logger.js'
+
 const app = express()
-const path = require('path')
-const port = process.env.PORT|| 8000;
+
+const port = process.env.PORT || 8000;
+
+//Body parser midddleware
+app.use(express.json());
+app.use(express.urlencoded({extended: false}))
+
+//Logger middleware
+app.use(logger);
+
 
 // setup static folder
 // app.use(express.static(path.join(__dirname,'public')))
 
-let posts = [
-    {id: 1, title: 'Post One'},
-    {id: 2, title: 'Post Two'},
-    {id: 3, title: 'Post Three'},
-]
+//Routes
 
-//Get All Post
-app.get('/api/posts', (req,res)=>{
-  res.json(posts);
-})
+app.use('/api/posts',posts);
 
-//Get A single Post
-app.get('/api/posts/:id', (req,res)=>{
-   
-   const id = parseInt(req.params.id);
-
-    res.json(posts.filter((post)=> post.id ===id ) )
-
-  })
 
 app.listen(port, ()=> console.log(`server is running on ${port}`))
