@@ -20,17 +20,18 @@ router.get('/', (req,res)=>{
 })
 
 //Get A single Post
-router.get('/:id', (req,res)=>{
+router.get('/:id', (req,res, next)=>{
    
    const id = parseInt(req.params.id);
    const post= posts.find((post)=>post.id===id)
 
    if(!post){
-      res.status(404).json({msg:`Not found`})
-   }else{
-     res.status(200).json(post)
+     const error = new Error(`A post with the id of ${id} was not found`);
+     return next(error);
    }
 
+   res.status(200).json(post)
+  
   })
 
   //Create new post
